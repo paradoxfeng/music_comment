@@ -2,10 +2,15 @@ import requests
 from config import *
 from lxml import etree
 import json
+import pymongo
+from multiprocessing import Process,Pool
+from gevent import monkey;monkey.patch_all()
 
 class Comment:
     def __init__(self):
         self.headers = HEADERS
+        self.client = pymongo.MongoClient(MONGO_URI)
+        self.db = self.client[MONGO_DB]
 
 
     def start_urls(self):
@@ -70,7 +75,17 @@ class Comment:
             comments = result['comments']
             for comment in comments:
                 comment = comment['content']
-                print(comment)
+                result = {
+                    'comment':comment
+                }
+                self.save_to_mongo(result)
+
+    def save_to_mongo(self,result):
+        if self.db['comment'].insert(result):
+            print('存储成功',result)
+            return True
+        else:
+            return False
 
 
 
@@ -84,5 +99,9 @@ class Comment:
         self.get_comment(response)
 
 
-c = Comment()
-c.start()
+
+if __name__ == '__main__':
+    c = Comment()
+    c.start()
+
+

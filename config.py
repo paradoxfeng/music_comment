@@ -30,3 +30,7 @@ START_URLS = ['http://music.163.com/discover/artist/cat?id=1001&initial={initial
                       # 'http://music.163.com/discover/artist/cat?id=4002&initial={initial}',
                       # 'http://music.163.com/discover/artist/cat?id=4003&initial={initial}'
                       ]
+
+
+MONGO_URI = 'localhost'
+MONGO_DB = 'comment'
